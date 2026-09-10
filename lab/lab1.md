@@ -13,3 +13,12 @@ quest 3:
 onfiguration is stored outside the repository, local configuration can be used for machine-specific/secrets, and credentials/passwords/tokens should never be committed to GitHub
 For this lab, I used Solution 1 from the updated lab instructions:
 a local DVC remote outside the Git repository.
+
+quest 4: 
+after running : dvc add data, DVC updated the .gitignore file and added the data/ folder to it. This means Git will not track or upload the actual dataset to GitHub.
+The reason is that the dataset is large, so DVC manages the data files instead of Git. Git only keeps the small DVC pointer file.
+
+qeust 5: 
+After running: dvc add data, a file called: data.dvc was created.
+This file does not contain the actual dataset. It contains information about the data/ folder, such as its hash, size, number of files, and path.
+The hash is used by DVC to identify the exact version of the dataset. So data.dvc acts like a pointer to the version of the data that should be used with the current Git version of the project.
