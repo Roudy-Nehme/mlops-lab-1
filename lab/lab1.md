@@ -22,3 +22,8 @@ qeust 5:
 After running: dvc add data, a file called: data.dvc was created.
 This file does not contain the actual dataset. It contains information about the data/ folder, such as its hash, size, number of files, and path.
 The hash is used by DVC to identify the exact version of the dataset. So data.dvc acts like a pointer to the version of the data that should be used with the current Git version of the project.
+
+quest 6: 
+On GitHub, I can see the project files, source code, configuration files, the lab folder, and the 'data.dvc' file.
+The actual Food-11 dataset is not stored on GitHub because the 'data/' folder is ignored by Git. Instead, Git stores the 'data.dvc' file, which points to the correct version of the dataset.
+For this lab, I used the local DVC remote solution, so the actual dataset is stored in my local DVC storage folder instead of DagsHub.
