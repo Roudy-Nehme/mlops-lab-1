@@ -27,3 +27,11 @@ quest 6:
 On GitHub, I can see the project files, source code, configuration files, the lab folder, and the 'data.dvc' file.
 The actual Food-11 dataset is not stored on GitHub because the 'data/' folder is ignored by Git. Instead, Git stores the 'data.dvc' file, which points to the correct version of the dataset.
 For this lab, I used the local DVC remote solution, so the actual dataset is stored in my local DVC storage folder instead of DagsHub.
+
+quest 7 :
+After cloning the GitHub repository into a new folder, I could see the project files and the 'data.dvc' file, but the actual Food-11 dataset was not present.
+This is because Git stores the source code and the DVC pointer file, while DVC manages the actual dataset.
+To retrieve the data, I ran:
+```bash
+dvc pull
+After running this command, the Food-11 dataset was restored from my configured local DVC remote.
