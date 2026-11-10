@@ -22,7 +22,7 @@ If a test fails, smoke is skipped. Without needs, both jobs could run at the sam
 
 quest 6:
 
-The two GitHub runs are still pending approval to push, so there are no timings yet. The uv dependency step should be faster on the second run because packages are cached.
+The [first run](https://github.com/Roudy-Nehme/mlops-lab-1/actions/runs/42843445696) took 6m 30s, and the [second](https://github.com/Roudy-Nehme/mlops-lab-1/actions/runs/42844638276) took 2m. uv sync dropped from 5s to 4s after restoring its package cache. The biggest improvement was the image build and push, from 4m 14s to 7s, after Docker reused cached layers.
 
 quest 7:
 
@@ -34,7 +34,7 @@ The job only needs permission to read code and publish packages. Giving it more 
 
 quest 9:
 
-This has not been tested on GitHub yet. With branch protection, the PR should show the failed check and block merging until the required checks pass. Everyone follows the same checks instead of relying on local testing.
+In [PR #1](https://github.com/Roudy-Nehme/mlops-lab-1/pull/1), test failed and smoke was skipped. GitHub blocked the merge because main requires both checks. After I fixed the assertion, both checks passed. Everyone on the team has to pass the same checks before merging.
 
 quest 10:
 
