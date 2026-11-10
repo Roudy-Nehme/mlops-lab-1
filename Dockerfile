@@ -9,7 +9,9 @@ RUN pip install uv
 
 COPY pyproject.toml uv.lock ./
 
-RUN uv sync --frozen --no-dev --no-install-project
+RUN --mount=type=cache,target=/root/.cache/uv \
+    UV_HTTP_TIMEOUT=300 UV_CONCURRENT_DOWNLOADS=4 \
+    uv sync --frozen --no-dev --no-install-project
 
 
 # -----------------------------

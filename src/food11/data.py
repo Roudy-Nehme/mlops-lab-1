@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from PIL import Image
 
 RAW_DIR = Path("data/food11_raw")
@@ -18,6 +19,17 @@ CATEGORIES = {
     "9": "Soup",
     "10": "Vegetable-Fruit",
 }
+
+CLASSES = list(CATEGORIES.values())
+
+
+def category_from_filename(filename: str) -> str:
+    return CATEGORIES[filename.split("_")[0]]
+
+
+def resize_image(img: Image.Image, size: int = 128) -> Image.Image:
+    return img.convert("RGB").resize((size, size))
+
 
 SPLITS = ["training", "evaluation", "validation"]
 IMAGE_SIZE = (128, 128)
@@ -50,8 +62,7 @@ def process_dataset():
             mini_folder.mkdir(parents=True, exist_ok=True)
 
             with Image.open(image_path) as image:
-                image = image.convert("RGB")
-                image = image.resize(IMAGE_SIZE)
+                image = resize_image(image)
 
                 image.save(processed_folder / image_path.name)
 

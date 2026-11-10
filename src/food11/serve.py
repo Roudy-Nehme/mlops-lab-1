@@ -1,14 +1,15 @@
 import io
 import os
+from contextlib import asynccontextmanager
+from typing import Annotated
 
-import mlflow
 import numpy as np
 import torch
-
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from PIL import Image
 from torchvision import transforms
 
+import mlflow
 
 # --------------------------------------------------
 # 1. MLflow connection
@@ -28,7 +29,16 @@ mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
 
 MODEL_URI = "models:/food11@champion"
 
-model = mlflow.pyfunc.load_model(MODEL_URI)
+model = None
+
+
+@asynccontextmanager
+async def lifespan(app):
+    global model
+    model = None
+    if not os.environ.get("SKIP_MODEL"):
+        model = mlflow.pyfunc.load_model(MODEL_URI)
+    yield
 
 
 # --------------------------------------------------
@@ -69,7 +79,7 @@ preprocess = transforms.Compose([
 # 5. Create the FastAPI application
 # --------------------------------------------------
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 
 # --------------------------------------------------
@@ -86,7 +96,9 @@ def health():
 # --------------------------------------------------
 
 @app.post("/predict")
-async def predict(file: UploadFile = File(...)):
+async def predict(file: Annotated[UploadFile, File()]):
+    if model is None:
+        raise HTTPException(status_code=503, detail="Model is not loaded")
     try:
         # Read the uploaded image
         contents = await file.read()
@@ -129,7 +141,7 @@ async def predict(file: UploadFile = File(...)):
             "confidence": float(confidence.item())
         }
 
-    except Exception as e:
+    except (OSError, ValueError, RuntimeError) as e:
         raise HTTPException(
             status_code=500,
             detail=str(e)

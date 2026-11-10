@@ -1,14 +1,14 @@
 import argparse
 from pathlib import Path
 
-import mlflow
 import mlflow.pytorch
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
-from torchvision import datasets, transforms, models
+from torchvision import datasets, models, transforms
 from torchvision.models import ResNet18_Weights
 
+import mlflow
 
 # Tell MLflow where the tracking server is
 mlflow.set_tracking_uri("http://127.0.0.1:5000")
@@ -128,8 +128,8 @@ def main():
 
     args = parser.parse_args()
 
-    # CPU will be used with your current PyTorch installation
-    device = torch.device("cpu")
+    # Use the GPU when CUDA is available; CI keeps using the CPU build.
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     print("Using device:", device)
 
@@ -223,7 +223,7 @@ def main():
                 step=epoch
             )
 
-        test_loss, test_accuracy = evaluate(
+        _test_loss, test_accuracy = evaluate(
             model,
             test_loader,
             criterion,
